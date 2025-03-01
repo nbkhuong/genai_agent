@@ -1,0 +1,5 @@
+kafka-python
+requests
+qdrant-client
+sentence-transformers
+pypdf2
