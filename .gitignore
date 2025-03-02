@@ -1,3 +1,4 @@
 models/*
 documents/*
 qdrant_data/*
+kafka_data/*
