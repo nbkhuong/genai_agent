@@ -1,30 +1,35 @@
 services:
   kafka:
-    image: confluentinc/cp-kafka:7.7.0
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka
+    container_name: kafka
     ports:
       - "9092:9092"
+      - "9093:9093"
     environment:
-      KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: controller,broker
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.123:9092
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.178.28:9092
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0 
+      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"
     volumes:
       - ./kafka_data:/var/lib/kafka/data
 
-  llama-server:
-    build:
-      context: .
-      dockerfile: Dockerfile.llama
+  ollama:
+    image: ollama/ollama:latest
     ports:
-      - "8080:8080"
+      - "11434:11434"
     volumes:
-      - ./models:/models
+      - ./models:/root/.ollama/models
     deploy:
       resources:
         reservations:
@@ -32,7 +37,7 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    command: ["./server", "-m", "/models/llama3.2.gguf", "--host", "0.0.0.0", "--port", "8080", "--ctx-size", "2048", "--n-gpu-layers", "999"]
+    command: ["serve"]
 
   qdrant:
     image: qdrant/qdrant:latest
@@ -47,13 +52,13 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - kafka
-      - llama-server
+      - ollama
       - qdrant
     volumes:
       - ./documents:/app/documents
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      LLAMA_SERVER_HOST: llama-server:8080
+      OLLAMA_SERVER_HOST: ollama:11434
       QDRANT_HOST: qdrant:6333
 
 volumes:

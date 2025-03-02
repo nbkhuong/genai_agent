@@ -1,5 +1,7 @@
 kafka-python
 requests
-qdrant-client
+langchain
+langchain-community
+langchain-qdrant
 sentence-transformers
-pypdf2
+pypdf
