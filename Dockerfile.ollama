@@ -1,0 +1,22 @@
+# Use the official Ollama image as the base
+FROM ollama/ollama:latest
+
+# Install prerequisites
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add NVIDIA's CUDA repository key and list for Debian 11 (Bullseye)
+RUN curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.0-1_all.deb -o /tmp/cuda-keyring.deb \
+    && dpkg -i /tmp/cuda-keyring.deb \
+    && rm /tmp/cuda-keyring.deb
+
+# Install libcudnn8 (adjust CUDA version if needed)
+RUN apt-get update && apt-get install -y \
+    libcudnn8 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Verify installation (optional, for debugging)
+RUN dpkg -l | grep cudnn || echo "cuDNN not found"

@@ -1,9 +1,9 @@
-from kafka import KafkaConsumer, KafkaProducer
-from kafka.errors import NoBrokersAvailable
-import json
-import requests
 import os
 import time
+import json
+import requests
+from kafka import KafkaConsumer, KafkaProducer
+from kafka.errors import NoBrokersAvailable
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Qdrant
@@ -11,124 +11,147 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain_core.language_models.llms import SimpleLLM
+from langchain_community.llms import Ollama  # Use built-in Ollama LLM
 
-# Kafka setup
-bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
-max_retries = 10
-retry_delay = 15
+# Kafka setup with retries
+def initialize_kafka():
+    bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
+    max_retries = 10
+    retry_delay = 15
 
-for attempt in range(max_retries):
-    try:
-        consumer = KafkaConsumer(
-            "llama_queries",
-            bootstrap_servers=bootstrap_servers,
-            auto_offset_reset="earliest",
-            value_deserializer=lambda x: json.loads(x.decode("utf-8"))
-        )
-        producer = KafkaProducer(
-            bootstrap_servers=bootstrap_servers,
-            value_serializer=lambda v: json.dumps(v).encode("utf-8")
-        )
-        print("Successfully connected to Kafka")
-        break
-    except NoBrokersAvailable:
-        print(f"Failed to connect to Kafka (attempt {attempt + 1}/{max_retries}). Retrying in {retry_delay} seconds...")
-        if attempt == max_retries - 1:
-            raise Exception("Could not connect to Kafka after multiple attempts")
-        time.sleep(retry_delay)
+    for attempt in range(max_retries):
+        try:
+            consumer = KafkaConsumer(
+                "llama_queries",
+                bootstrap_servers=bootstrap_servers,
+                auto_offset_reset="latest",
+                value_deserializer=lambda x: json.loads(x.decode("utf-8"))
+            )
+            producer = KafkaProducer(
+                bootstrap_servers=bootstrap_servers,
+                value_serializer=lambda v: json.dumps(v).encode("utf-8")
+            )
+            print("Successfully connected to Kafka")
+            return consumer, producer
+        except NoBrokersAvailable as e:
+            print(f"Failed to connect to Kafka (attempt {attempt + 1}/{max_retries}): {e}")
+            if attempt == max_retries - 1:
+                raise Exception("Could not connect to Kafka after multiple attempts")
+            time.sleep(retry_delay)
 
-# Ollama server setup
-ollama_server_url = f"http://{os.getenv('OLLAMA_SERVER_HOST', 'ollama:11434')}/api/generate"
-
-# Embedding model
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-
-# Qdrant setup
-qdrant_host = os.getenv("QDRANT_HOST", "qdrant:6333")
-collection_name = "documents"
-
-# Load and index documents
-def index_documents():
+# Index documents into Qdrant
+def index_documents(embeddings, qdrant_host, collection_name):
     try:
         vectorstore = Qdrant.from_existing_collection(
             embedding=embeddings,
             collection_name=collection_name,
             url=f"http://{qdrant_host}"
         )
-        print("Collection already exists, skipping indexing.")
-    except:
-        print("Indexing documents into Qdrant...")
+        print("Loaded existing Qdrant collection.")
+    except Exception as e:
+        print(f"No existing collection found or error ({e}), indexing documents...")
         documents = []
-        for filename in os.listdir("/app/documents"):
-            if filename.endswith(".pdf"):
-                loader = PyPDFLoader(os.path.join("/app/documents", filename))
-                documents.extend(loader.load())
-        
-        if documents:
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-            splits = text_splitter.split_documents(documents)
+        docs_dir = "/app/documents"
+        if not os.path.exists(docs_dir):
+            print(f"Documents directory {docs_dir} does not exist.")
+            return None
+
+        for filename in os.listdir(docs_dir):
+            if filename.lower().endswith(".pdf"):
+                file_path = os.path.join(docs_dir, filename)
+                try:
+                    loader = PyPDFLoader(file_path)
+                    documents.extend(loader.load())
+                except Exception as e:
+                    print(f"Error loading {file_path}: {e}")
+
+        if not documents:
+            print("No documents found to index.")
+            return None
+
+        # Split and index documents
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        splits = text_splitter.split_documents(documents)
+        try:
             vectorstore = Qdrant.from_documents(
                 documents=splits,
                 embedding=embeddings,
                 url=f"http://{qdrant_host}",
                 collection_name=collection_name
             )
-            print(f"Indexed {len(splits)} document chunks in Qdrant")
-        else:
-            print("No documents found to index.")
+            print(f"Indexed {len(splits)} document chunks into Qdrant")
+        except Exception as e:
+            print(f"Error indexing documents into Qdrant: {e}")
+            return None
+
     return vectorstore
 
-# Custom LLM class for Ollama
-class OllamaLLM(SimpleLLM):
-    def _call(self, prompt: str, stop=None) -> str:
-        payload = {
-            "model": "llama3.2",
-            "prompt": prompt,
-            "stream": False,
-            "max_tokens": 512,
-            "temperature": 0.7
-        }
-        if stop:
-            payload["stop"] = stop
-        response = requests.post(ollama_server_url, json=payload)
-        response.raise_for_status()
-        return response.json()["response"]
+def main():
+    # Environment variables
+    ollama_host = os.getenv("OLLAMA_SERVER_HOST", "ollama:11434")
+    ollama_base_url = f"http://{ollama_host}"
+    qdrant_host = os.getenv("QDRANT_HOST", "qdrant:6333")
+    collection_name = "documents"
 
-# Warm-up Ollama server
-print("Warming up Ollama server...")
-requests.post(ollama_server_url, json={
-    "model": "llama3.2",
-    "prompt": "Ping",
-    "stream": False,
-    "max_tokens": 10
-})
+    # Initialize embeddings
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-# Initialize vectorstore and RAG chain
-vectorstore = index_documents()
-retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-llm = OllamaLLM()
+    # Warm up Ollama server with the custom model
+    print("Warming up Ollama server...")
+    try:
+        llm_temp = Ollama(base_url=ollama_base_url, model="llama32-3B-instruct")
+        response = llm_temp.invoke("Ping", max_tokens=10)
+        print(f"Ollama server is ready. Warm-up response: {response}")
+    except Exception as e:
+        print(f"Error warming up Ollama: {e}")
 
-prompt_template = ChatPromptTemplate.from_template(
-    "Based on this context: {context}\nAnswer: {question}"
-)
+    # Initialize Kafka
+    consumer, producer = initialize_kafka()
 
-rag_chain = (
-    {"context": retriever | (lambda docs: " ".join([d.page_content for d in docs])), "question": RunnablePassthrough()}
-    | prompt_template
-    | llm
-    | StrOutputParser()
-)
+    # Initialize vectorstore and RAG chain
+    vectorstore = index_documents(embeddings, qdrant_host, collection_name)
+    if vectorstore is None:
+        print("Failed to initialize vectorstore. Exiting.")
+        return
 
-# Process queries
-print("LLaMA 3.2 with LangChain and Qdrant listening for queries...")
-for message in consumer:
-    query = message.value["query"]
-    print(f"Received query: {query}")
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+    llm = Ollama(
+        base_url=ollama_base_url,
+        model="llama32-3B-instruct",  # Updated model name
+        temperature=0.7,
+        num_predict=512  # Equivalent to max_tokens
+    )
+
+    prompt_template = ChatPromptTemplate.from_template(
+        "Based on this context: {context}\nAnswer: {question}"
+    )
+
+    rag_chain = (
+        {"context": retriever | (lambda docs: " ".join([d.page_content for d in docs])), "question": RunnablePassthrough()}
+        | prompt_template
+        | llm
+        | StrOutputParser()
+    )
+
+    # Process Kafka messages
+    print("LLaMA 32-3B-instruct with LangChain and Qdrant listening for queries...")
+    msg = None
+    for message in consumer:
+        try:
+            query = message.value.get("query", "")
+            if not query:
+                print("Received empty query, skipping.")
+                continue
+
+            print(f"Received query: {query}")
+            answer = rag_chain.invoke(query)
+            producer.send("llama_responses", {"query": query, "response": answer})
+            producer.flush()
+            print(f"Sent response: {answer}")
+            break
+        except Exception as e:
+            print(f"Error processing query '{query}': {e}")
+
+if __name__ == "__main__":
+    main()
     
-    # Generate response with RAG chain
-    answer = rag_chain.invoke(query)
-    
-    producer.send("llama_responses", {"query": query, "response": answer})
-    producer.flush()
-    print(f"Sent response: {answer}")

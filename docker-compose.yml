@@ -23,21 +23,27 @@ services:
       CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"
     volumes:
       - ./kafka_data:/var/lib/kafka/data
+    networks:
+      - gen-network
 
   ollama:
-    image: ollama/ollama:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama
+    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
       - ./models:/root/.ollama/models
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+      - OLLAMA_HOST=0.0.0.0  
+      - OLLAMA_PORT=11434 
     command: ["serve"]
+    networks:
+      - gen-network
 
   qdrant:
     image: qdrant/qdrant:latest
@@ -45,6 +51,8 @@ services:
       - "6333:6333"
     volumes:
       - ./qdrant_data:/qdrant/storage
+    networks:
+      - gen-network
 
   llama-app:
     build:
@@ -60,7 +68,14 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       OLLAMA_SERVER_HOST: ollama:11434
       QDRANT_HOST: qdrant:6333
+    networks:
+      - gen-network
 
 volumes:
   kafka-data:
   qdrant-data:
+
+networks:
+  gen-network:
+    driver:
+      bridge
