@@ -2,3 +2,4 @@ models/*
 documents/*
 qdrant_data/*
 kafka_data/*
+kafka_data/__cluster_metadata-0
