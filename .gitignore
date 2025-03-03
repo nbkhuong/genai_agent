@@ -1,7 +1,4 @@
 models/*
-documents/
-!documents/.gitkeep
-qdrant_data/
-!qdrant_data/.gitkeep
-kafka_data/
-!kafka_data/.gitkeep
+documents/*
+qdrant_data/*
+kafka_data/*
