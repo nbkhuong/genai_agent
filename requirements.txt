@@ -3,5 +3,7 @@ requests
 langchain
 langchain-community
 langchain-qdrant
+langchain-huggingface 
+langchain-ollama
 sentence-transformers
 pypdf

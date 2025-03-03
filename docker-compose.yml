@@ -31,6 +31,7 @@ services:
       context: .
       dockerfile: Dockerfile.ollama
     container_name: ollama
+    restart: always
     ports:
       - "11434:11434"
     volumes:
@@ -47,6 +48,7 @@ services:
 
   qdrant:
     image: qdrant/qdrant:latest
+    container_name: qdrant
     ports:
       - "6333:6333"
     volumes:
@@ -55,9 +57,10 @@ services:
       - gen-network
 
   llama-app:
+    container_name: llama-app
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.llama-app
     depends_on:
       - kafka
       - ollama
