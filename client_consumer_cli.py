@@ -54,7 +54,6 @@ def listen_for_responses(consumer):
 def main():
     producer, consumer = initialize_kafka()
 
-    # Example: Send a query and listen for responses
     try:
         while True:
             # Send a query

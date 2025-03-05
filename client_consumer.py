@@ -5,7 +5,7 @@ from kafka.errors import NoBrokersAvailable
 import streamlit as st
 
 # Kafka configuration
-KAFKA_BOOTSTRAP_SERVERS = "192.168.178.28:9092"  # Replace with your Kafka server address
+KAFKA_BOOTSTRAP_SERVERS = "192.168.178.28:9092" 
 QUERY_TOPIC = "llama_queries"
 RESPONSE_TOPIC = "llama_responses"
 

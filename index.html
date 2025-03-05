@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QThing - Query AnyThing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center mr-8">
+                        <span class="ml-2 text-xl font-bold text-purple-600">QThing</span>
+                    </div>
+                    <div class="hidden sm:flex sm:space-x-8">
+                        <a href="#features" class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Features</a>
+                        <a href="#technologies" class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Technologies</a>
+                        <a href="#hardware" class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Hardware</a>
+                        <a href="#architecture" class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Architecture</a>
+                        <a href="#demo" class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">Demo</a>
+                        <a href="#github" class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-24 pb-12 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+            <div class="w-full md:w-1/2 mb-8 md:mb-0">
+                <h1 class="text-4xl font-extrabold mb-4">QThing - Query AnyThing</h1>
+                <p class="text-xl mb-6">Transform PDFs into interactive knowledge bases with privacy-first, local AI processing.</p>
+                <div class="flex space-x-4">
+                    <a href="#demo" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition">Demo</a>
+                    <a href="#github" class="border border-white text-white px-6 py-3 rounded-lg font-bold hover:bg-white hover:text-purple-600 transition">View on GitHub</a>
+                </div>
+            </div>
+            <!-- <div class="w-full md:w-1/2 flex justify-center">
+                <img src="/api/placeholder/500/400" alt="DocuQuery System" class="animate-float max-w-full h-auto">
+            </div> -->
+        </div>
+    </header>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 text-purple-600">Project Overview</h2>
+                    <p class="text-lg mb-4">
+                        DocuQuery is an advanced, privacy-first document question-answering system that transforms how you interact 
+                        with your PDF documents. Powered by cutting-edge local AI/LLM technologies.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-purple-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p>Leverages cutting-edge local AI models for secure, private document analysis with advanced AI techniques and comprehensive data protection</p>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-purple-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p>Uses microservices architecture for scalable and flexible document processing, enabling modular and efficient system design with independent service components</p>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-purple-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p>Enables semantic search and context-aware question answering with advanced natural language processing techniques and intelligent document comprehension</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <img src="./website/query_anything.png" alt="DocuQuery Overview" class="rounded-lg shadow-lg max-w-full h-auto">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">Features</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">🔒</div>
+                    <h3 class="text-xl font-semibold mb-3">Locally Hosted LLM</h3>
+                    <p>100% local AI inference with no cloud dependencies.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">🤖</div>
+                    <h3 class="text-xl font-semibold mb-3">Retrieval-Augmented Generation</h3>
+                    <p>Advanced semantic search and context-aware responses.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">📊</div>
+                    <h3 class="text-xl font-semibold mb-3">Scalable Architecture</h3>
+                    <p>System designed for flexibility and performance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Hardware Section -->
+    <section id="hardware" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="flex justify-center">
+                    <img 
+                        src="./website/hardware.png" 
+                        alt="QThing Project Visualization" 
+                        class="rounded-lg shadow-lg max-w-full h-auto"
+                    >
+                </div>
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 text-purple-600">Host's Hardware Specifications</h2>
+                    <p class="text-lg mb-4">
+                        The LLM Model is hosted on a mini pc Lenovo P330 Tiny with a "modded" dedicated GPU.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-purple-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p>CPU: Intel Core i7 9700T - 8 Cores</p>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-purple-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p>RAM: 32GB </p>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-purple-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p>GPU: RTX A2000 12GB</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <p class="italic text-gray-600">Image is original.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section id="technologies" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">Technologies</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">🖥️</div>
+                    <h3 class="text-xl font-semibold mb-3">Apache Kafka</h3>
+                    <p>A distributed event streaming platform used for building real-time data pipelines and streaming applications, known for its scalability and fault tolerance.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">💾</div>
+                    <h3 class="text-xl font-semibold mb-3">Qdrant</h3>
+                    <p>A high-performance, open-source vector database optimized for similarity search, commonly used in AI and recommendation systems.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">🔌</div>
+                    <h3 class="text-xl font-semibold mb-3">Langchain</h3>
+                    <p>A framework that simplifies the development of applications powered by large language models (LLMs), enabling easy integrations and advanced AI workflows.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">🔧</div>
+                    <h3 class="text-xl font-semibold mb-3">Ollama</h3>
+                    <p>A tool for running, managing, and customizing large language models (LLMs) locally, making AI more accessible and efficient.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">🛰️</div>
+                    <h3 class="text-xl font-semibold mb-3">Docker</h3>
+                    <p>A containerization platform that packages applications and dependencies into portable containers, ensuring consistency across different environments.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4 text-purple-600">📱</div>
+                    <h3 class="text-xl font-semibold mb-3">Streamlit</h3>
+                    <p>A Python-based framework for building and deploying interactive web applications for data visualization and machine learning models with minimal effort.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">System Architecture & Technologies</h2>
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="w-full md:w-1/2 mb-8 md:mb-0 md:mr-8">
+                    <iframe 
+                        id="architecture-animation" 
+                        src="./website/querything.html" 
+                        width="100%" 
+                        height="800" 
+                        class="rounded-lg shadow-lg" 
+                        frameborder="0"
+                        scrolling="no"
+                        style="overflow:hidden;"
+                    >
+                        Your browser does not support iframes.
+                    </iframe>
+                    <figcaption class="mt-4 text-center text-gray-600 text-sm">
+                        System Architecture of the QThing
+                    </figcaption>
+                    <script>
+                        window.addEventListener('load', function() {
+                            const iframe = document.getElementById('architecture-animation');
+                            
+                            // Listen for messages from the iframe
+                            window.addEventListener('message', function(event) {
+                                // Ensure the message is from the expected origin
+                                if (event.origin !== window.location.origin) return;
+                                
+                                // Resize iframe based on received height
+                                if (event.data.type === 'resize') {
+                                    iframe.style.height = event.data.height + 'px';
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-semibold mb-3">1. Document Ingestion and Preprocessing</h3>
+                            <p>The system ingests PDF documents from 
+                                a specified directory 
+                                and prepares them for embedding and retrieval.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-semibold mb-3">2. Embedding and Vector Storage</h3>
+                            <p>Converts document chunks into embeddings and stores 
+                                them in a vector database for efficient similarity search.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-semibold mb-3">3. Retrieval-Augmented Generation (RAG) Pipeline</h3>
+                            <p>Combines document retrieval with natural language generation 
+                                to provide context-aware answers to user queries.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-semibold mb-3">4. Message Handling with Kafka</h3>
+                            <p>Provides a streaming pipeline for handling queries and 
+                                responses asynchronously in a distributed system.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-semibold mb-3">5. Orchestration and Main Loop</h3>
+                            <p>Ties all components together into a cohesive application, orchestrated by Langchain.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-semibold mb-3">6. User Interaction via GUI</h3>
+                            <p>A web application powered by Streamlit serves as communication platform between Client (User) and Host (RAG-based system).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-12 text-purple-600">Demo</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <div class="aspect-w-16 aspect-h-9 mx-auto max-w-4xl">
+                    <iframe 
+                        width="560" 
+                        height="315" 
+                        src="./website/demo.mkv" 
+                        title="QThing Project Overview" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen
+                        class="w-full rounded-lg"
+                    ></iframe>
+                </div>
+                <p class="mt-6 text-gray-600 max-w-2xl mx-auto">
+                    Watch our comprehensive video guide that walks you through the innovative features, 
+                    technological architecture, and transformative potential of the QThing document processing system.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- GitHub Section -->
+    <section id="github" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-8">Github Repository</h2>
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+                <a href="https://github.com/nbkhuong/genai_agent" class="bg-gray-800 text-white px-8 py-4 rounded-lg flex items-center hover:bg-gray-700">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub Repository
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p> </p>
+        </div>
+    </footer>
+</body>
+</html>
